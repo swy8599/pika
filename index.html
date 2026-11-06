@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>교육 소감 - 피카츄 등장!</title>
+  <!-- pikachu.png 파일을 이 HTML 파일과 같은 폴더에 두세요. -->
+  <style>
+    :root {
+      --ink: #20283b;
+      --red: #ef3340;
+      --red-dark: #c91f2d;
+      --yellow: #ffd84d;
+      --ice: #eaf9ff;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      width: 100%;
+      min-height: 100%;
+      margin: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      overflow: hidden;
+      color: var(--ink);
+      font-family: "Pretendard", "Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
+      background:
+        radial-gradient(circle at 16% 18%, rgba(255,255,255,.88) 0 3%, transparent 3.2%),
+        radial-gradient(circle at 83% 15%, rgba(255,255,255,.7) 0 2.2%, transparent 2.4%),
+        radial-gradient(circle at 75% 65%, rgba(255,255,255,.46) 0 5%, transparent 5.2%),
+        linear-gradient(180deg, #9edbff 0%, #d9f2ff 60%, #f3fcff 100%);
+    }
+
+
+    body::before {
+      content: "";
+      position: fixed;
+      z-index: 24;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 50% 55%,
+          rgba(255,255,255,.98) 0 8%,
+          rgba(255,245,166,.72) 24%,
+          rgba(255,255,255,0) 67%);
+      opacity: 0;
+    }
+
+    body.firework-flash::before {
+      animation: screenFlash .52s ease-out;
+    }
+
+    @keyframes screenFlash {
+      0% { opacity: 0; transform: scale(.35); }
+      22% { opacity: .95; }
+      100% { opacity: 0; transform: scale(1.45); }
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      z-index: 0;
+      left: -10vw;
+      right: -10vw;
+      bottom: -17vh;
+      height: 39vh;
+      border-radius: 50% 50% 0 0;
+      background: linear-gradient(180deg, #fff, #dff6ff);
+      box-shadow: 0 -12px 35px rgba(58,123,160,.12);
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      place-items: center;
+      min-height: 100vh;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .intro {
+      position: fixed;
+      z-index: 5;
+      top: clamp(22px, 5vh, 54px);
+      left: 50%;
+      width: min(92vw, 700px);
+      transform: translateX(-50%);
+      transition: opacity .4s ease, transform .4s ease;
+    }
+
+    .intro h1 {
+      margin: 0 0 9px;
+      font-size: clamp(25px, 5vw, 44px);
+      letter-spacing: -.04em;
+      text-shadow: 0 3px 0 rgba(255,255,255,.72);
+    }
+
+    .intro p {
+      margin: 0;
+      color: #31546c;
+      font-size: clamp(15px, 2.5vw, 19px);
+      font-weight: 800;
+      animation: guideBounce 1.45s ease-in-out infinite;
+    }
+
+    @keyframes guideBounce {
+      50% { transform: translateY(-4px); opacity: .74; }
+    }
+
+    .scene {
+      position: relative;
+      width: min(94vw, 720px);
+      height: min(76vh, 650px);
+      min-height: 480px;
+      margin-top: 68px;
+      perspective: 1200px;
+    }
+
+    /* 말풍선 */
+    .speech {
+      position: absolute;
+      z-index: 30;
+      top: 0;
+      left: 50%;
+      width: min(90vw, 510px);
+      padding: clamp(17px, 4vw, 27px) clamp(20px, 5vw, 36px);
+      transform: translate(-50%, -20px) scale(.16);
+      transform-origin: 50% 100%;
+      border: 5px solid #29334a;
+      border-radius: 30px;
+      background: #fff;
+      box-shadow: 0 11px 0 rgba(41,51,74,.11), 0 20px 38px rgba(48,91,118,.2);
+      font-size: clamp(20px, 4.3vw, 34px);
+      font-weight: 950;
+      line-height: 1.42;
+      letter-spacing: -.045em;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .speech::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: -28px;
+      width: 32px;
+      height: 32px;
+      transform: translateX(-50%) rotate(45deg);
+      border-right: 5px solid #29334a;
+      border-bottom: 5px solid #29334a;
+      background: white;
+    }
+
+    .speech strong { color: #e63340; }
+
+    .scene.opened .speech {
+      animation: speechPop .75s cubic-bezier(.16,1.25,.3,1) 1.38s forwards;
+    }
+
+    @keyframes speechPop {
+      0% { opacity: 0; transform: translate(-50%, -20px) scale(.16) rotate(-5deg); }
+      72% { opacity: 1; transform: translate(-50%, -20px) scale(1.08) rotate(2deg); }
+      100% { opacity: 1; transform: translate(-50%, -20px) scale(1) rotate(0); }
+    }
+
+    /* 빛 효과 */
+    .glow {
+      position: absolute;
+      z-index: 8;
+      left: 50%;
+      bottom: 22%;
+      width: 250px;
+      height: 250px;
+      transform: translate(-50%, 50%) scale(.08);
+      border-radius: 50%;
+      background: radial-gradient(circle,
+        rgba(255,255,255,1) 0 9%,
+        rgba(255,244,154,.95) 25%,
+        rgba(255,255,255,.45) 48%,
+        rgba(255,255,255,0) 72%);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .scene.opened .glow {
+      animation: glowBurst 1.35s ease-out .35s forwards;
+    }
+
+    @keyframes glowBurst {
+      0% { opacity: 0; transform: translate(-50%, 50%) scale(.08); }
+      23% { opacity: 1; }
+      100% { opacity: 0; transform: translate(-50%, 50%) scale(2.7); }
+    }
+
+    /* 정면에서 입처럼 열리는 몬스터볼 */
+    .ball-stage {
+      position: absolute;
+      z-index: 14;
+      left: 50%;
+      bottom: 6%;
+      width: clamp(205px, 43vw, 310px);
+      aspect-ratio: 1;
+      transform: translateX(-50%);
+      transform-style: preserve-3d;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      animation: ballFloat 2.15s ease-in-out infinite;
+    }
+
+    .ball-stage:focus-visible {
+      outline: 5px solid #ffdb43;
+      outline-offset: 10px;
+      border-radius: 50%;
+    }
+
+    @keyframes ballFloat {
+      0%,100% { transform: translateX(-50%) translateY(0) rotate(-1.5deg); }
+      50% { transform: translateX(-50%) translateY(-11px) rotate(1.5deg); }
+    }
+
+    .ball-shadow {
+      position: absolute;
+      left: 50%;
+      bottom: -13%;
+      width: 82%;
+      height: 17%;
+      transform: translateX(-50%);
+      border-radius: 50%;
+      background: rgba(34,68,88,.2);
+      filter: blur(9px);
+    }
+
+    .ball-body {
+      position: absolute;
+      inset: 0;
+      transform-style: preserve-3d;
+      filter: drop-shadow(0 18px 18px rgba(25,67,92,.24));
+    }
+
+    .half {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 50%;
+      overflow: hidden;
+      border: 10px solid #222833;
+      backface-visibility: visible;
+    }
+
+    .top-half {
+      top: 0;
+      z-index: 4;
+      border-bottom-width: 5px;
+      border-radius: 999px 999px 0 0;
+      background:
+        radial-gradient(ellipse at 35% 24%, rgba(255,255,255,.38) 0 13%, transparent 14%),
+        linear-gradient(145deg, #ff5560, var(--red) 48%, var(--red-dark));
+      transform-origin: 50% 100%;
+    }
+
+
+    .bottom-half {
+      bottom: 0;
+      z-index: 3;
+      border-top-width: 5px;
+      border-radius: 0 0 999px 999px;
+      background: linear-gradient(145deg, #fff 20%, #eef2f5 72%, #d9e0e7);
+      transform-origin: 50% 0%;
+    }
+
+    /* 정면에서 보이는 입 안쪽 */
+    .mouth-dark {
+      position: absolute;
+      z-index: 1;
+      left: 3%;
+      right: 3%;
+      top: 34%;
+      height: 39%;
+      overflow: hidden;
+      border: 8px solid #222833;
+      border-radius: 50%;
+      background: #000;
+      transform: scaleY(.02);
+      transform-origin: center;
+      box-shadow: inset 0 0 14px rgba(255,255,255,.05);
+      opacity: 0;
+    }
+
+    .center-button {
+      position: absolute;
+      z-index: 10;
+      left: 50%;
+      top: 50%;
+      width: 29%;
+      aspect-ratio: 1;
+      transform: translate(-50%, -50%);
+      border: 9px solid #222833;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: inset 0 0 0 7px #e7ebef;
+      transition: opacity .18s ease;
+    }
+
+    .center-button::after {
+      content: "";
+      position: absolute;
+      inset: 28%;
+      border-radius: 50%;
+      background: #f9fcff;
+      box-shadow: 0 0 12px rgba(255,255,255,.9);
+    }
+
+    /* 몬스터볼의 위아래 반구가 분리되어 떨어지는 효과 */
+    .scene.opened .ball-stage {
+      pointer-events: none;
+      animation:
+        ballSettle .3s ease forwards,
+        wholeBallFade .25s ease .98s forwards;
+    }
+
+    .scene.opened .top-half {
+      animation: topMouthOpen .78s cubic-bezier(.18,.8,.24,1) .08s forwards;
+    }
+
+    .scene.opened .bottom-half {
+      animation: bottomMouthOpen .78s cubic-bezier(.18,.8,.24,1) .08s forwards;
+    }
+
+    .scene.opened .mouth-dark {
+      opacity: 0;
+      animation: none;
+    }
+
+    .scene.opened .center-button {
+      animation: buttonDisappear .25s ease .08s forwards;
+    }
+
+    @keyframes ballSettle {
+      to { transform: translateX(-50%) translateY(0) rotate(0); }
+    }
+
+    @keyframes topMouthOpen {
+      0% {
+        transform: translate(0, 0) rotate(0deg) scale(1);
+      }
+      18% {
+        transform: translate(0, 5px) rotate(0deg) scale(1.02);
+      }
+      68% {
+        transform: translate(-16px, -92px) rotate(-13deg) scale(.98);
+      }
+      84% {
+        transform: translate(-11px, -82px) rotate(-9deg) scale(1);
+      }
+      100% {
+        transform: translate(-14px, -87px) rotate(-11deg) scale(1);
+      }
+    }
+
+    @keyframes bottomMouthOpen {
+      0% {
+        transform: translate(0, 0) rotate(0deg) scale(1);
+      }
+      18% {
+        transform: translate(0, -4px) rotate(0deg) scale(1.02);
+      }
+      68% {
+        transform: translate(14px, 72px) rotate(10deg) scale(.98);
+      }
+      84% {
+        transform: translate(10px, 63px) rotate(7deg) scale(1);
+      }
+      100% {
+        transform: translate(12px, 68px) rotate(8deg) scale(1);
+      }
+    }
+
+    @keyframes mouthOpen {
+      0% {
+        opacity: 0;
+        transform: scaleX(.82) scaleY(.02);
+      }
+      22% {
+        opacity: .45;
+        transform: scaleX(.9) scaleY(.18);
+      }
+      62% {
+        opacity: 1;
+        transform: scaleX(1) scaleY(1.18);
+      }
+      82% {
+        opacity: 1;
+        transform: scaleX(1) scaleY(.94);
+      }
+      100% {
+        opacity: 1;
+        transform: scaleX(1) scaleY(1);
+      }
+    }
+
+    @keyframes buttonDisappear {
+      to { opacity: 0; transform: translate(-50%, -50%) scale(.45); }
+    }
+
+    @keyframes wholeBallFade {
+      0% {
+        opacity: 1;
+        filter: blur(0);
+        transform: translateX(-50%) translateY(0) scale(1);
+      }
+      100% {
+        opacity: 0;
+        filter: blur(4px);
+        transform: translateX(-50%) translateY(8px) scale(.92);
+      }
+    }
+
+    /* 같은 폴더의 pikachu.png 이미지를 사용하는 캐릭터 영역 */
+    .pikachu-wrap {
+      position: absolute;
+      z-index: 13;
+      left: 50%;
+      bottom: 9%;
+      width: clamp(190px, 38vw, 275px);
+      height: clamp(245px, 49vw, 350px);
+      transform: translateX(-50%) translateY(190px) scale(.12);
+      opacity: 0;
+      pointer-events: none;
+      filter: drop-shadow(0 18px 15px rgba(37,75,99,.24));
+    }
+
+    .scene.opened .pikachu-wrap {
+      animation: pikachuImageJump .95s cubic-bezier(.16,1.18,.32,1) .58s forwards;
+    }
+
+    .pikachu-image {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center bottom;
+      user-select: none;
+      -webkit-user-drag: none;
+      animation:
+        pikachuFloat 1.2s ease-in-out 1.55s infinite alternate,
+        pikachuTilt 2.4s ease-in-out 1.55s infinite alternate;
+      transform-origin: 50% 85%;
+    }
+
+    .image-error {
+      display: none;
+      position: absolute;
+      inset: 20% -25% auto;
+      padding: 12px 15px;
+      border: 3px solid #29334a;
+      border-radius: 16px;
+      color: #29334a;
+      background: white;
+      box-shadow: 0 8px 18px rgba(28,50,72,.18);
+      font-size: 14px;
+      font-weight: 850;
+      line-height: 1.45;
+      white-space: nowrap;
+    }
+
+    .pikachu-wrap.load-error .image-error {
+      display: block;
+    }
+
+    @keyframes pikachuImageJump {
+      0% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(190px) scale(.12) rotate(-7deg);
+      }
+      58% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(-52px) scale(1.1) rotate(4deg);
+      }
+      78% {
+        transform: translateX(-50%) translateY(-24px) scale(.97) rotate(-2deg);
+      }
+      100% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(-33px) scale(1) rotate(0);
+      }
+    }
+
+    @keyframes pikachuFloat {
+      from { translate: 0 0; }
+      to { translate: 0 -7px; }
+    }
+
+    @keyframes pikachuTilt {
+      from { rotate: -1.5deg; }
+      to { rotate: 1.5deg; }
+    }
+
+    .sparkle {
+      position: absolute;
+      z-index: 10;
+      color: #fff;
+      font-size: clamp(25px, 5vw, 42px);
+      text-shadow: 0 0 12px #ffe866;
+      opacity: 0;
+    }
+
+    .sparkle.s1 { left: 14%; top: 34%; }
+    .sparkle.s2 { right: 13%; top: 42%; font-size: clamp(18px, 4vw, 32px); }
+    .sparkle.s3 { right: 23%; top: 20%; font-size: clamp(15px, 3vw, 25px); }
+
+    .scene.opened .sparkle.s1 { animation: sparkle 1s ease .8s forwards; }
+    .scene.opened .sparkle.s2 { animation: sparkle 1s ease 1.05s forwards; }
+    .scene.opened .sparkle.s3 { animation: sparkle 1s ease 1.2s forwards; }
+
+    @keyframes sparkle {
+      0% { opacity: 0; transform: scale(.1) rotate(0); }
+      45% { opacity: 1; transform: scale(1.3) rotate(90deg); }
+      100% { opacity: 0; transform: scale(.6) rotate(180deg); }
+    }
+
+    #confetti {
+      position: fixed;
+      z-index: 25;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .replay {
+      position: fixed;
+      z-index: 40;
+      right: 20px;
+      bottom: 20px;
+      padding: 12px 18px;
+      border: 0;
+      border-radius: 999px;
+      color: #fff;
+      background: #28334b;
+      box-shadow: 0 8px 20px rgba(23,39,62,.25);
+      font: inherit;
+      font-weight: 850;
+      cursor: pointer;
+      opacity: 0;
+      transform: translateY(12px);
+      pointer-events: none;
+      transition: .3s ease;
+    }
+
+    .scene.opened ~ .replay {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    @media (max-height: 670px) {
+      .intro { top: 14px; }
+      .intro h1 { margin-bottom: 3px; font-size: 25px; }
+      .scene { margin-top: 62px; transform: scale(.87); }
+      .speech { top: 12px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .ball-stage, .intro p, .pikachu-image { animation: none !important; }
+      .scene.opened .top-half,
+      .scene.opened .bottom-half,
+      .scene.opened .mouth-dark,
+      .scene.opened .center-button,
+      .scene.opened .ball-stage,
+      .scene.opened .glow,
+      .scene.opened .pikachu-wrap,
+      .scene.opened .speech,
+      .scene.opened .sparkle {
+        animation-duration: .01ms !important;
+        animation-delay: 0ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="confetti" aria-hidden="true"></canvas>
+
+  <main class="page">
+    <header class="intro" id="intro">
+      <h1>나의 교육 소감</h1>
+      <p>몬스터볼을 클릭해 주세요!</p>
+    </header>
+
+    <section class="scene" id="scene" aria-live="polite">
+      <div class="speech">
+        그 동안 재밌게 배웠습니다!<br />
+        <strong>감사합니다!</strong>
+      </div>
+
+      <div class="sparkle s1">✦</div>
+      <div class="sparkle s2">✦</div>
+      <div class="sparkle s3">✦</div>
+      <div class="glow"></div>
+
+      <div class="pikachu-wrap" id="pikachuCharacter">
+        <img
+          class="pikachu-image"
+          src="./pikachu.png"
+          alt="몬스터볼에서 튀어나오는 피카츄"
+          draggable="false"
+          onerror="this.style.display='none'; this.parentElement.classList.add('load-error');"
+        />
+        <div class="image-error">
+          pikachu.png 이미지를<br />HTML 파일과 같은 폴더에 넣어 주세요.
+        </div>
+      </div>
+
+      <div
+        class="ball-stage"
+        id="pokeball"
+        role="button"
+        tabindex="0"
+        aria-label="몬스터볼 열기"
+      >
+        <div class="ball-shadow"></div>
+        <div class="ball-body">
+          <div class="mouth-dark"></div>
+          <div class="half top-half"></div>
+          <div class="half bottom-half"></div>
+          <div class="center-button"></div>
+        </div>
+      </div>
+    </section>
+
+    <button class="replay" id="replay" type="button">↻ 다시 보기</button>
+  </main>
+
+  <script>
+    const scene = document.getElementById("scene");
+    const pokeball = document.getElementById("pokeball");
+    const replay = document.getElementById("replay");
+    const intro = document.getElementById("intro");
+    const canvas = document.getElementById("confetti");
+    const ctx = canvas.getContext("2d");
+
+    let particles = [];
+    let animationId = null;
+
+    function resizeCanvas() {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = innerWidth * dpr;
+      canvas.height = innerHeight * dpr;
+      canvas.style.width = innerWidth + "px";
+      canvas.style.height = innerHeight + "px";
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    const fireworkColors = [
+      "#ef3340", "#ff6b35", "#ffd84a", "#fff07a",
+      "#35c7ff", "#1976ff", "#795cff", "#c36cff",
+      "#42d77d", "#00e6b8", "#ff78b7", "#ffffff"
+    ];
+
+    function randomColor() {
+      return fireworkColors[Math.floor(Math.random() * fireworkColors.length)];
+    }
+
+    function triggerFlash() {
+      document.body.classList.remove("firework-flash");
+      void document.body.offsetWidth;
+      document.body.classList.add("firework-flash");
+      setTimeout(() => document.body.classList.remove("firework-flash"), 560);
+    }
+
+    function makeBurst(x, y, count = 180, power = 1) {
+      for (let i = 0; i < count; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = (4 + Math.random() * 12) * power;
+        const shapeChance = Math.random();
+
+        particles.push({
+          x, y,
+          oldX: x,
+          oldY: y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed - 4.2 * power,
+          gravity: .17 + Math.random() * .13,
+          drag: .985,
+          size: 4 + Math.random() * 9,
+          color: randomColor(),
+          rotation: Math.random() * Math.PI,
+          rotationSpeed: (Math.random() - .5) * .38,
+          life: 95 + Math.random() * 65,
+          maxLife: 160,
+          shape: shapeChance > .72 ? "star" : shapeChance > .28 ? "rect" : "circle",
+          trail: Math.random() > .82,
+          glow: Math.random() > .6
+        });
+      }
+
+      particles = particles.slice(-1500);
+      if (!animationId) animateConfetti();
+    }
+
+    function makeFirework(x, y, count = 100, radius = 1) {
+      const primary = randomColor();
+      const secondary = Math.random() > .45 ? randomColor() : primary;
+
+      for (let i = 0; i < count; i++) {
+        const angle = (Math.PI * 2 * i / count) + (Math.random() - .5) * .075;
+        const speed = (4.5 + Math.random() * 5.8) * radius;
+
+        particles.push({
+          x, y,
+          oldX: x,
+          oldY: y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          gravity: .045 + Math.random() * .055,
+          drag: .974,
+          size: 2.4 + Math.random() * 3.4,
+          color: Math.random() > .28 ? primary : secondary,
+          rotation: angle,
+          rotationSpeed: .04,
+          life: 70 + Math.random() * 38,
+          maxLife: 108,
+          shape: Math.random() > .82 ? "star" : "spark",
+          trail: true,
+          glow: true
+        });
+      }
+
+      // 중심부의 하얀 섬광
+      for (let i = 0; i < 22; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 1.5 + Math.random() * 4;
+        particles.push({
+          x, y,
+          oldX: x,
+          oldY: y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          gravity: .02,
+          drag: .95,
+          size: 2 + Math.random() * 4,
+          color: "#ffffff",
+          rotation: 0,
+          rotationSpeed: 0,
+          life: 28 + Math.random() * 20,
+          maxLife: 48,
+          shape: "spark",
+          trail: true,
+          glow: true
+        });
+      }
+
+      particles = particles.slice(-1500);
+      if (!animationId) animateConfetti();
+    }
+
+    function makeConfettiRain(count = 170) {
+      for (let i = 0; i < count; i++) {
+        const x = Math.random() * innerWidth;
+        const y = -20 - Math.random() * innerHeight * .38;
+
+        particles.push({
+          x, y,
+          oldX: x,
+          oldY: y,
+          vx: (Math.random() - .5) * 3.2,
+          vy: 1.5 + Math.random() * 4,
+          gravity: .055 + Math.random() * .055,
+          drag: .995,
+          size: 5 + Math.random() * 10,
+          color: randomColor(),
+          rotation: Math.random() * Math.PI,
+          rotationSpeed: (Math.random() - .5) * .28,
+          life: 170 + Math.random() * 95,
+          maxLife: 265,
+          shape: Math.random() > .22 ? "rect" : "star",
+          trail: false,
+          glow: Math.random() > .8
+        });
+      }
+
+      particles = particles.slice(-1500);
+      if (!animationId) animateConfetti();
+    }
+
+    function drawStar(context, outerRadius, innerRadius) {
+      context.beginPath();
+      for (let i = 0; i < 10; i++) {
+        const radius = i % 2 === 0 ? outerRadius : innerRadius;
+        const angle = -Math.PI / 2 + i * Math.PI / 5;
+        const px = Math.cos(angle) * radius;
+        const py = Math.sin(angle) * radius;
+        if (i === 0) context.moveTo(px, py);
+        else context.lineTo(px, py);
+      }
+      context.closePath();
+      context.fill();
+    }
+
+    function animateConfetti() {
+      ctx.clearRect(0, 0, innerWidth, innerHeight);
+      ctx.globalCompositeOperation = "source-over";
+
+      particles.forEach(p => {
+        p.oldX = p.x;
+        p.oldY = p.y;
+        p.vx *= p.drag;
+        p.vy = p.vy * p.drag + p.gravity;
+        p.x += p.vx;
+        p.y += p.vy;
+        p.rotation += p.rotationSpeed;
+        p.life -= 1;
+
+        const alpha = Math.max(0, Math.min(1, p.life / Math.min(38, p.maxLife * .3)));
+
+        if (p.trail) {
+          ctx.save();
+          ctx.globalAlpha = alpha * .55;
+          ctx.strokeStyle = p.color;
+          ctx.lineWidth = Math.max(1, p.size * .42);
+          ctx.lineCap = "round";
+          ctx.shadowColor = p.color;
+          ctx.shadowBlur = p.glow ? 10 : 0;
+          ctx.beginPath();
+          ctx.moveTo(p.oldX, p.oldY);
+          ctx.lineTo(p.x - p.vx * 2.8, p.y - p.vy * 2.8);
+          ctx.stroke();
+          ctx.restore();
+        }
+
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rotation);
+        ctx.globalAlpha = alpha;
+        ctx.fillStyle = p.color;
+
+        if (p.glow) {
+          ctx.shadowColor = p.color;
+          ctx.shadowBlur = 13;
+        }
+
+        if (p.shape === "circle") {
+          ctx.beginPath();
+          ctx.arc(0, 0, p.size / 2, 0, Math.PI * 2);
+          ctx.fill();
+        } else if (p.shape === "star") {
+          drawStar(ctx, p.size * .72, p.size * .32);
+        } else if (p.shape === "spark") {
+          ctx.fillRect(-p.size * 1.1, -p.size * .16, p.size * 2.2, p.size * .32);
+          ctx.rotate(Math.PI / 2);
+          ctx.fillRect(-p.size * .7, -p.size * .12, p.size * 1.4, p.size * .24);
+        } else {
+          const flutter = .35 + Math.abs(Math.sin(p.rotation)) * .65;
+          ctx.scale(1, flutter);
+          ctx.fillRect(-p.size / 2, -p.size / 3, p.size, p.size * .66);
+        }
+
+        ctx.restore();
+      });
+
+      particles = particles.filter(
+        p => p.life > 0 &&
+             p.y < innerHeight + 100 &&
+             p.x > -120 &&
+             p.x < innerWidth + 120
+      );
+
+      if (particles.length) {
+        animationId = requestAnimationFrame(animateConfetti);
+      } else {
+        animationId = null;
+        ctx.clearRect(0, 0, innerWidth, innerHeight);
+      }
+    }
+
+    function openBall() {
+      if (scene.classList.contains("opened")) return;
+
+      const rect = pokeball.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height * .44;
+
+      scene.classList.add("opened");
+
+      intro.style.opacity = "0";
+      intro.style.transform = "translateX(-50%) translateY(-15px)";
+
+      // 1차: 몬스터볼 중심에서 강한 폭발
+      setTimeout(() => {
+        triggerFlash();
+        makeBurst(centerX, centerY, 260, 1.12);
+        makeFirework(centerX, centerY - 35, 110, .86);
+      }, 390);
+
+      // 2차: 화면 상단 좌우 대형 원형 폭죽
+      setTimeout(() => {
+        makeFirework(innerWidth * .2, innerHeight * .25, 115, 1.08);
+        makeFirework(innerWidth * .8, innerHeight * .22, 115, 1.08);
+      }, 690);
+
+      // 3차: 중앙 상단과 양옆에 연속 폭죽
+      setTimeout(() => {
+        makeFirework(innerWidth * .5, innerHeight * .16, 135, 1.18);
+        makeFirework(innerWidth * .08, innerHeight * .5, 75, .8);
+        makeFirework(innerWidth * .92, innerHeight * .48, 75, .8);
+      }, 930);
+
+      // 4차: 화면 전체 색종이 비
+      setTimeout(() => {
+        makeConfettiRain(220);
+      }, 1040);
+
+      // 5차: 마무리 반짝이 폭죽
+      setTimeout(() => {
+        makeFirework(innerWidth * .3, innerHeight * .38, 80, .76);
+        makeFirework(innerWidth * .7, innerHeight * .35, 80, .76);
+      }, 1320);
+    }
+
+
+    function resetScene() {
+      scene.classList.remove("opened");
+      document.body.classList.remove("firework-flash");
+      particles = [];
+      ctx.clearRect(0, 0, innerWidth, innerHeight);
+      intro.style.opacity = "";
+      intro.style.transform = "";
+      void scene.offsetWidth;
+      pokeball.focus();
+    }
+
+    pokeball.addEventListener("click", openBall);
+
+    pokeball.addEventListener("keydown", event => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        openBall();
+      }
+    });
+
+    replay.addEventListener("click", resetScene);
+  </script>
+</body>
+</html>
